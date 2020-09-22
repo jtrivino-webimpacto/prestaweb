@@ -37,22 +37,51 @@ class Infoemail extends Module
 
     public function getContent()
     {
+        $this->smarty->assign('save', false);
+
         if(Tools::isSubmit('submitInfo'))
         {
             $this->sendTestEmail(Tools::getValue('exampleMessage'));
+            $this->smarty->assign('save', true);
         }
 
         return $this->display(__FILE__, 'configure.tpl');
     }
 
+    public function generarVoucher(Customer $customer)
+    {
+
+        $cartRuleObj = new CartRule();
+
+        $cartRuleObj->date_from = date('Y-m-d H:i:s');
+        $cartRuleObj->date_to = '2046-12-12 00:00:00';
+        $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = 'Voucher';
+        $cartRuleObj->quantity = 1;
+        $code = Tools::passwdGen();
+            while (CartRule::cartRuleExists($code)) {
+        $code = Tools::passwdGen();
+    }
+        $cartRuleObj->code = $code;
+        //dump($cartRuleObj->code);
+        $cartRuleObj->quantity_per_user = 1;
+        $cartRuleObj->reduction_percent = 20;
+        $cartRuleObj->reduction_amount = 0;
+        $cartRuleObj->free_shipping = 0;
+        $cartRuleObj->active = 1;
+        $cartRuleObj->minimum_amount = 0;
+        $cartRuleObj->id_customer = $customer->id;
+        $cartRuleObj->add();
+    }
+
     public function sendTestEmail($email)
     {
+
         Mail::Send(
             $this->context->language->id,
             'test',
             $this->l('This is a test email'),
             array(
-                '{datetime}' => date('Y-m-d H:i:s')
+                '{datetime}' => date('Y-m-d H:i:s'),
             ),
             $email,
             'PrestaShop User',
