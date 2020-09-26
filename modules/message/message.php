@@ -16,43 +16,55 @@ class Message extends Module
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         parent::__construct();
         $this->displayName = 'Welcome';
-        $this->description = 'Welcome message to my shop';
+        $this->description = 'This module show Welcome message to my shop';
     }
 
     public function install()
     {
-        if(!parent::install() ||
-           !Configuration::updateValue('WEBIMPACTO_MESSAGE', 'Welcome to my shop with PrestaShop') ||
-           !$this->registerHook('displayHome') ||
-           !$this->registerHook('displayFooterBefore')
-            )
-            return false;
-        return true;
+        return parent::install() &&
+        $this->registerHook('displayHome') &&
+        $this->registerHook('displayFooterBefore') &&
+        $this->registerHook('header');
     }
 
     public function uninstall()
     {
-        if(!parent::uninstall() ||
-           !Configuration::deleteByName('WEBIMPACTO_MESSAGE')
-           )
-           return false;
+        return parent::uninstall();
+    }
 
-        return true;
+    public function hookHeader()
+    {
+        $this->context->controller->addCSS(array(
+            $this->_path.'views/css/message.css'
+        ));
+    }
+
+    public function getContent()
+    {
+        if(Tools::isSubmit('savemultipurposesting'))
+        {
+            $name = Tools::getValue('print');
+            Configuration::updateValue('MULTIPURPOSE_STR', $name);
+        }
+        $this->context->smarty->assign(array(
+            'MULTIPURPOSE_STR' => Configuration::get('MULTIPURPOSE_STR')
+        ));
+        return $this->display(__FILE__,'views/templates/admin/configure.tpl');
     }
 
     public function hookDisplayHome($params)
     {
-        $message = Configuration::get('WEBIMPACTO_MESSAGE');
-        $this->context->smarty->assign('message', $message);
-
-        return $this->display(__FILE__, 'displayHome.tpl');
+        $this->context->smarty->assign(array(
+            'MULTIPURPOSE_STR' => Configuration::get('MULTIPURPOSE_STR')
+        ));
+        return $this->display(__FILE__, 'message.tpl');
     }
 
     public function hookDisplayFooterBefore($params)
     {
-        $message = Configuration::get('WEBIMPACTO_MESSAGE');
-        $this->context->smarty->assign('message', $message);
-
-        return $this->display(__FILE__, 'displayFooterBefore.tpl');
+        $this->context->smarty->assign(array(
+            'MULTIPURPOSE_STR' => Configuration::get('MULTIPURPOSE_STR')
+        ));
+        return $this->display(__FILE__, 'message.tpl');
     }
 }
