@@ -41,10 +41,12 @@ class Message extends Module
 
     public function getContent()
     {
+        $this->smarty->assign('save', false);
         if(Tools::isSubmit('savemultipurposesting'))
         {
             $name = Tools::getValue('print');
             Configuration::updateValue('MULTIPURPOSE_STR', $name);
+            $this->smarty->assign('save', true);
         }
         $this->context->smarty->assign(array(
             'MULTIPURPOSE_STR' => Configuration::get('MULTIPURPOSE_STR')

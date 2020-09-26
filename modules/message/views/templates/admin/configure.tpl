@@ -1,3 +1,12 @@
+{if $save}
+    <div class="bootstrap">
+    <div class="module_confirmation conf confirm alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        URL guardada correctamente
+    </div>
+</div>
+{/if}
+
 <form method="post">
     <div class="panel">
         <div class="panel-heading">
