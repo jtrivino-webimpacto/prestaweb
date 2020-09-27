@@ -1,8 +1,8 @@
 {shop_url}
 
-Hola {firstname} {lastname}, {id_order}
+Hola {firstname} {lastname},
 
-Esta es una prueba de email de su tienda, creado por Jeimy Triviño
+Usted ha gastado {total}
 
 Si puede leer esto, significa que ¡la prueba fue completada correctamente!
 

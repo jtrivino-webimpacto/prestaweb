@@ -64,8 +64,35 @@ class Infoemail extends Module
         $order = $params['order'];
         $total = $order->total_paid;
 
-        if($total >= 30)
-        {
+        if ($total <= 30) {
+            $subject = sprintf(Mail::l('Orden con referencia %d'), $params['order']->id);
+		    $shop_email = Configuration::get('PS_SHOP_EMAIL');
+		    $shop_name = Configuration::get('PS_SHOP_NAME');
+		    $mail_dir = dirname(__FILE__).'/mails';
+		    $mail_vars = array(
+			    '{id_order}' => $order->id,
+                '{firstname}' => $customer->firstname,
+                '{lastname}' => $customer->lastname,
+                '{email}' => $customer->email,
+                '{total}' => $total
+		    );
+
+        Mail::Send(
+            $this->context->language->id,
+			'test',
+			$subject,
+			$mail_vars,
+			$shop_email,
+			null,
+			$shop_email,
+			$shop_name,
+			null,
+			null,
+			$mail_dir,
+			false,
+			$this->context->shop->id
+        );
+        } else {
             $cartRuleObj = new CartRule();
 
             $cartRuleObj->date_from = date('Y-m-d H:i:s');
@@ -117,6 +144,6 @@ class Infoemail extends Module
 			$this->context->shop->id
 		);
         }
+
     }
 }
-
