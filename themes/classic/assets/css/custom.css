@@ -1,0 +1,32 @@
+/*
+ * Custom code goes here.
+ * A template should always ship with an empty custom.css
+ */
+
+ .cart-products-count {
+    background: red;
+    color: #fff;
+    font-size: 0.7rem;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 100%;
+    position: absolute;
+    right: -10px;
+}
+
+.footer2 {
+    border-top: 1px solid gray;
+    padding: 24px;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+img .logo .img-responsive{
+    margin-top: 50px !important;
+}
+
+#prueba{
+    display: none;
+}
