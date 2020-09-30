@@ -23,14 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if $product.show_price}
-<div class="current-price">
-          <span class="price" itemprop="price" content="{$product.price_amount}">{$product.price}</span>
   <div class="product-prices">
     {block name='product_discount'}
       {if $product.has_discount}
         <div class="product-discount">
           {hook h='displayProductPriceBlock' product=$product type="old_price"}
-
           <span class="regular-price">{$product.regular_price}</span>
         </div>
       {/if}
@@ -45,6 +42,9 @@
       >
         <link itemprop="availability" href="{$product.seo_availability}"/>
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
+
+        <div class="current-price">
+          <span itemprop="price" content="{$product.price_amount}">{$product.price}</span>
 
           {if $product.has_discount}
             {if $product.discount_type === 'percentage'}

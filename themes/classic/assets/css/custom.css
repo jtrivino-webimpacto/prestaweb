@@ -15,7 +15,74 @@
     position: absolute;
     right: -10px;
 }
+.dropdown-item{
+    display:none;
+}
+.user-info{
+    margin-left: 0 !important;
+}
 
+.user-info a{
+    color: #333 !important;
+    text-decoration: none;
+}
+
+.pruebaa{
+    display:flex;
+    justify-content: space-around;
+}
+#_desktop_user_info{
+    margin-left: 12px;
+}
+#_desktop_user_info:hover{
+    background-color: gainsboro;
+}
+
+#_desktop_language_selector:hover{
+    background-color: gainsboro;
+}
+
+#_desktop_logo{
+    padding: 12px;
+}
+
+.h4{
+    font-size: 1.429rem;
+    margin-bottom: .5rem;
+    line-height: 1.1;
+    color: #444;
+    font-weight: 300;
+}
+.product-discount{
+    position: absolute;
+    right: 2px;
+    top: 0px;
+}
+.price{
+    position: absolute;
+    font-size: 44px;
+    color: #ff6000;
+    font-weight: bold;
+}
+
+.has-discount .discount{
+    position: absolute;
+    right: 0px;
+    background-color: #ee413d;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 1px 3px;
+}
+
+.tax-shipping-delivery-label{
+    margin-top: 20px;
+}
+
+.regular-price{
+    position: absolute;
+    top: 55px;
+    right: 321px;
+}
 .footer2 {
     border-top: 1px solid gray;
     padding: 24px;

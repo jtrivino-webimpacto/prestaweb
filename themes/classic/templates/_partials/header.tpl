@@ -31,7 +31,7 @@
 {block name='header_nav'}
   <nav class="header-nav">
     <div class="container-fluid">
-      <div class="row">
+      <div class="row align-items-end">
       <div class="col-lg-2 hidden-md-down" id="_desktop_logo">
       {if $page.page_name == 'index'}
               <h1>
@@ -45,11 +45,11 @@
                 </a>
             {/if}
             </div>
-            <div class="hidden-md-down col-lg-10">
-                <div class="  col-md-8 col-xs-12">
+            <div class="hidden-md-down col-lg-10 pruebaa">
+                <div class="col-md-4 col-xs-12">
                     {hook h='displayTop'}
                 </div>
-                <div class="col-md-4 right-nav">
+                <div class="col-md-6 right-nav">
                     {hook h='displayNav2'}
                 </div>
             </div>
