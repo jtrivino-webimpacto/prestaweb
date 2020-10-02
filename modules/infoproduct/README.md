@@ -11,14 +11,14 @@
 Existe dos manera de realizarlo:
 
 #### Creando un módulo
-(https://victor-rodenas.com/2018/02/19/anadir-campos-a-los-productos-en-prestashop-1-7/#more-16896)
+https://victor-rodenas.com/2018/02/19/anadir-campos-a-los-productos-en-prestashop-1-7/#more-16896
 
 #### Modificando directamente los archivo de Prestashop
-(https://fueradelacaja.es/anadir-campos-personalizados-en-productos-prestashop-1-7/)
+https://fueradelacaja.es/anadir-campos-personalizados-en-productos-prestashop-1-7/
 
 #### Páginas adicionales que serán de ayuda
-(https://urimarti.com/tutoriales-prestashop)
+https://urimarti.com/tutoriales-prestashop
 
-(https://www.choosepizzi.net/category/prestashop-1-7/)
+https://www.choosepizzi.net/category/prestashop-1-7/
 
-(https://www.jose-aguilar.com/blog/como-trabajar-con-la-base-de-datos-de-prestashop/#codesyntax_2)
+https://www.jose-aguilar.com/blog/como-trabajar-con-la-base-de-datos-de-prestashop/#codesyntax_2

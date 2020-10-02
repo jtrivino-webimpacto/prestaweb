@@ -2,9 +2,11 @@
 
 Hola {firstname} {lastname},
 
-Usted ha gastado {total}
+Usted ha gastado en nuestra tienda {cantidad_dinero_gastado}
 
-Si puede leer esto, significa que ¡la prueba fue completada correctamente!
+Se ha generado el código del cupón {enviar_cupon}
+
+Para utilizarlo, simplemente copie/pegue este código durante el proceso de pago.
 
 [{shop_name}]({shop_url})
 
