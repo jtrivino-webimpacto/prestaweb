@@ -23,17 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='header_banner'}
-  <div class="header-banner">
+  <div class="header-banner justify-content-around" id="nav1">
     {hook h='displayBanner'}
   </div>
 {/block}
 
 {block name='header_nav'}
   <nav class="header-nav">
-    <div class="container-fluid">
-      <div class="row align-items-end">
-      <div class="col-lg-2 hidden-md-down" id="_desktop_logo">
-      {if $page.page_name == 'index'}
+    <div class="container">
+      <div class="row">
+        <div class="hidden-sm-down">
+          <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
+            {if $page.page_name == 'index'}
               <h1>
                 <a href="{$urls.base_url}">
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
@@ -44,16 +45,25 @@
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
                 </a>
             {/if}
-            </div>
-            <div class="hidden-md-down col-lg-10 pruebaa">
-                <div class="col-md-4 col-xs-12">
-                    {hook h='displayTop'}
-                </div>
-                <div class="col-md-6 right-nav">
-                    {hook h='displayNav2'}
-                </div>
-            </div>
+        </div>
+        <div class="col-md-2 hidden-xs-down hidden-sm-down">
+             <div id="search_widget" class="search-widget" data-search-controller-url="{$search_controller_url}">
+	<form method="get" action="{$search_controller_url}">
+		<input type="hidden" name="controller" value="search">
+		<input type="text" name="s" value="{$search_string}" placeholder="{l s='Search our catalog' d='Shop.Theme.Catalog'}" aria-label="{l s='Search' d='Shop.Theme.Catalog'}">
+		<button type="submit">
+			<i class="material-icons search">&#xE8B6;</i>
+      <span class="hidden-xl-down">{l s='Search' d='Shop.Theme.Catalog'}</span>
+		</button>
+	</form>
+</div>
+          </div>
+          </div>
+          <div class="col-md-8 right-nav">
 
+              {hook h='displayNav2'}
+          </div>
+        </div>
         <div class="hidden-md-up text-sm-center mobile">
           <div class="float-xs-left" id="menu-icon">
             <i class="material-icons d-inline">&#xE5D2;</i>
@@ -72,9 +82,10 @@
   <div class="header-top">
     <div class="container">
        <div class="row">
-
-
-
+        <div class="col-sm-12 hidden-md-12 hidden-lg-12 hidden-xl-12">
+          {hook h='displayTop'}
+          <div class="clearfix"></div>
+        </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">
         <div class="js-top-menu mobile" id="_mobile_top_menu"></div>

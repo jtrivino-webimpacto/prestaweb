@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div id="prueba" >
+<div id="_desktop_currency_selector">
   <div class="currency-selector dropdown js-dropdown">
     <span id="currency-selector-label">{l s='Currency:' d='Shop.Theme.Global'}</span>
     <button data-target="#" data-toggle="dropdown" class="hidden-sm-down btn-unstyle" aria-haspopup="true" aria-expanded="false" aria-label="{l s='Currency dropdown' d='Shop.Theme.Global'}">

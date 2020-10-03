@@ -43,13 +43,21 @@
         <span class="hidden-sm-down">{$customerName}</span>
       </a>
     {else}
+    <a
+        href="{$my_account_url}"
+        title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
+        rel="nofollow"
+      >
+        <i class="material-icons">&#xE7FF;</i>
+        <span class="hidden-sm-down">{l s='Premium' d='Shop.Theme.Actions'}</span>
+      </a>
       <a
         href="{$my_account_url}"
         title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
         <i class="material-icons">&#xE7FF;</i>
-        <span class="hidden-sm-down">{l s='Mi Cuenta' d='Shop.Theme.Actions'}</span>
+        <span class="hidden-sm-down">{l s='Mi cuenta' d='Shop.Theme.Actions'}</span>
       </a>
     {/if}
   </div>

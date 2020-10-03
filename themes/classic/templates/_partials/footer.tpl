@@ -43,10 +43,10 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <p class="text-sm-center footer2">
+        <p class="text-sm-center">
           {block name='copyright_link'}
             <a class="_blank" href="https://www.prestashop.com" target="_blank" rel="nofollow">
-              {l s='PC Componentes y Multimedia SLU CIF B73347494. AVDA Europa, Parcela 2-5 y 2-6. Polígono industrial Las Salinas, 30840, Alhama de Murcia, Murcia. ESPAÑA.' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
+              {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
             </a>
           {/block}
         </p>

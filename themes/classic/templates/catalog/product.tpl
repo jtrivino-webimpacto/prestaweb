@@ -90,7 +90,6 @@
 
           <div class="product-information">
             {block name='product_description_short'}
-            {hook h="displayAfterDescription"}
               <div id="product-description-short-{$product.id}" itemprop="description">{$product.description_short nofilter}</div>
             {/block}
 

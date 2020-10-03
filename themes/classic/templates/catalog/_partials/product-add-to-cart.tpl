@@ -40,9 +40,9 @@
           >
         </div>
 
-        <div class="add">
+        <div id="add">
           <button
-            class="btn btn-primary add-to-cart"
+            class="btn btn-info add-to-cart btn-md btn-block btn-add-to-cart"
             data-button-action="add-to-cart"
             type="submit"
             {if !$product.add_to_cart_url}
@@ -50,10 +50,23 @@
             {/if}
           >
             <i class="material-icons shopping-cart">&#xE547;</i>
-            {l s='Add to cart' d='Shop.Theme.Actions'}
+
           </button>
         </div>
 
+        <div class="add">
+          <button
+            class="btn btn-primary add-to-cart btn-lg btn-block btn-add-to-cart"
+            data-button-action="add-to-cart"
+            type="submit"
+            {if !$product.add_to_cart_url}
+              disabled
+            {/if}
+          >
+
+            {l s='COMPRAR' d='Shop.Theme.Actions'}
+          </button>
+        </div>
         {hook h='displayProductActions' product=$product}
       </div>
     {/block}

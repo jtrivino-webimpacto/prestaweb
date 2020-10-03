@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/AFL-3.0
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,21 +19,25 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div id="_desktop_cart">
-  <div class="blockcart cart-preview {if $cart.products_count > 0}active{else}inactive{/if}" data-refresh-url="{$refresh_url}">
-    <div class="header">
-      {if $cart.products_count > 0}
-        <a rel="nofollow" href="{$cart_url}">
-      {/if}
-        <i class="material-icons shopping-cart">shopping_cart</i>
-        <span class="hidden-sm-down">{l s='Cart' d='Shop.Theme.Checkout'}</span>
-        <span class="cart-products-count">{$cart.products_count}</span>
-      {if $cart.products_count > 0}
-        </a>
-      {/if}
-    </div>
-  </div>
-</div>
+{if isset($js_def) && is_array($js_def) && $js_def|@count}
+<script type="text/javascript">
+{foreach from=$js_def key=k item=def}
+var {$k} = {$def|json_encode nofilter};
+{/foreach}
+</script>
+{/if}
+{if isset($js_files) && $js_files|@count}
+{foreach from=$js_files key=k item=js_uri}
+<script type="text/javascript" src="{$js_uri}"></script>
+{/foreach}
+{/if}
+{if isset($js_inline) && $js_inline|@count}
+<script type="text/javascript">
+{foreach from=$js_inline key=k item=inline}
+{$inline}
+{/foreach}
+</script>
+{/if}

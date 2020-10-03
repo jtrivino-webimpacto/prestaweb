@@ -37,7 +37,6 @@
           </span>
         </span>
       </div>
-
       <ul id="footer_sub_menu_{$_expand_id}" class="collapse">
         {foreach $linkBlock.links as $link}
           <li>
@@ -53,9 +52,7 @@
           </li>
         {/foreach}
       </ul>
-
     </div>
   {/foreach}
   </div>
 </div>
-

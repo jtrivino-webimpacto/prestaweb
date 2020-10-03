@@ -71,11 +71,8 @@
                 </a>
             {/if}
         </div>
-
         <div class="col-md-10 col-sm-12 position-static">
-
           {hook h='displayTop'}
-
           <div class="clearfix"></div>
         </div>
       </div>
