@@ -1,218 +1,135 @@
 <?php
 
-require(dirname(__FILE__).'/config/config.inc.php');
+include('./config/config.inc.php');
+include('./init.php');
 
-foreach(Language::getLanguages(true) as $language){
-    $langs[] = $language['id_lang'];
+$csv_file = file_get_contents('products.csv');
+//dump($csv_file);
+$data = explode("\n", $csv_file);
+$data = array_filter(array_map("trim", $data));
+//dump($data);
+$root_category = Category::getRootCategory();
+//dump($root_category);
+$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
+$i = 0;
+foreach ($data as $csv) {
+    $i++;
+    if ($i < 2) {continue;}
+
+    $csv_values = explode(",", $csv);
+    //dump($csv_values);
+    $name = $csv_values[0];
+    $reference = $csv_values[1];
+    $ean13 = $csv_values[2];
+    $wholesale_price = $csv_values[3];
+    $price = $csv_values[4];
+    $iva = floatval($csv_values[5]);
+    $quantity= (int)$csv_values[6];
+    dump($quantity);
+    $brand = $csv_values[8];
+
+
+$product = new Product();
+
+$product->name = [$id_lang => $name];
+$product->reference = $reference;
+$product->ean13 =$ean13;
+$product->link_rewrite = [$lang => 'product'];
+$product->price = $price;
+$product->wholesale_price = $wholesale_price;
+$product->id_tax_rules_group = (int)getIVA($iva);
+//dump((int)getIVA($iva));
+$product->quantity = $quantity;
+$product->miminal_quantity = 0;
+$product->id_category = $root_category->id;
+$product->id_category_default = $root_category->id;
+$product->redirect_type = '404';
+$product->show_price = 1;
+
+if (!($brand_id = getBrand($brand))) {
+    $brand_id = createBrand($brand);
 }
 
-//Importando datos del fichero a array
-$csv = 'products.csv';
-$fp = fopen($csv,"r");
-while ($data[] = fgetcsv ($fp, 1000, ",")) {
+$product->id_manufacturer = $brand_id;
+
+$product->add();
+$product->addToCategories([$root_category->id]);
+
+StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, Context::getContext()->shop->id);
+
+$cat = addslashes(utf8_encode(trim($csv_values[7])));
+//dump($cat);
+$categories = explode(";", $cat);
+//dump($categories);
+$product->addCategories= addCategories($product, $categories);
+
+
 }
-fclose($fp);
 
-array_pop($data);
-
-$numProducts = count($data)-1;
-
-//Inicio importacion
-for($i=1; $i<=$numProducts;$i++){
-    //Preparando el array product->name
-    foreach($langs as $lang){
-        $names[$lang] = $data[$i][0];
+function getIVA($iva)
+{
+    if ($iva == 10) {
+        return TaxRulesGroup::getIdByName('ES Reduced Rate (10%)');
+    } elseif ($iva == 21) { // 21% Iva
+        return TaxRulesGroup::getIdByName('ES Standard rate (21%)');
     }
-    $product = new Product();
-    $product->name = $names;
-    $product->reference = $data[$i][1];
-    $product->ean13 = $data[$i][2];
-    $product->wholesale_price = (float)$data[$i][3];
-    $product->price = (float)$data[$i][4];
-    $product->redirect_type ='301-category';
-    $impuestos = floatval($data[$i][5]);//.'.000');
-    $product->id_tax_rules_group = (int)getIdTax($impuestos);
-    $product->on_sale = 0;
-    $product->id_manufacturer = (int)getIdMarcaProducto($data[$i][8]);
-    $product->add();
-    StockAvailable::setQuantity($product->id, $product->id, (int)$data[$i][6]);
 
-    //Obteniendo los id de las categorias y creando las necesarias
-    $categories = explode(';',$data[$i][7]);
-    $defaultCategory = 0;
-    $idCategories = [];
-    foreach($categories as $category){
-        $idCategory = getIdProductCategory(trim($category), $langs);
-        if($idCategory){
-            if($defaultCategory == 0){
-                $product->id_category_default = $idCategory;
-            }
-            $idCategories[]=$idCategory;
-            $defaultCategory++;
+    // No iva
+    return 0;
+
+}
+
+function getBrand($brand_name)
+{
+    $manufacturer = Manufacturer::getIdByName($brand_name);
+
+    if (is_nan($manufacturer) && $manufacturer == false) {
+        $manufacturer = null;
+    } else {
+        $manufacturer = new Manufacturer($manufacturer);
+    }
+
+    return $manufacturer->id;
+}
+
+function createBrand($brand_name)
+{
+    $manufacturer = new Manufacturer();
+    $manufacturer->name = $brand_name;
+    $manufacturer->active = 1;
+    $manufacturer->save();
+
+    return $manufacturer->id;
+}
+
+function addCategories($product, $categories)
+{
+    $id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+    $root_category = Category::getRootCategory();
+
+    foreach ($categories as $category) {
+
+        $found_categories = Category::searchByNameAndParentCategoryId($id_lang, $category, $root_category->id);
+
+        $new_category = null;
+        if (!$found_categories) {
+            $link = Tools::link_rewrite($category);
+
+            $new_category = new Category();
+            $new_category->name = [$id_lang => $category];
+            $new_category->id_parent = $root_category->id;
+            $new_category->is_root_category = false;
+            $new_category->active = 1;
+            $new_category->link_rewrite = [$id_lang => $link];
+            $new_category->add();
+            $new_category->save();
+        } else {
+            $new_category = new Category($found_categories['id_category']);
+        }
+
+        if ($new_category) {
+            $product->addToCategories([$new_category->id]);
         }
     }
-    if(count($idCategories)>0){
-        $product->addToCategories($idCategories);
-	//$shops = Shop::getShops(true, null, true);
-    }
-}
-
-echo "Datos actualizados <br/> $numProducts productos insertados  <br/>";
-
-/**
-* Conseguir el grupo de id_tax al que pertenece un impuesto
-*/
-function getIdTax($tax){
-    $db = \Db::getInstance();
-    $request = "SELECT id_tax "
-            . "FROM ps_tax "
-            . "WHERE rate = $tax ";
-    $id_tax = $db->getValue($request);
-    return $id_tax;
-}
-
-/**
-* Obtener category_id si existe, sino la crea y devuelve el id
-*/
-function getIdProductCategory($name,$lang){
-    $result = buscarCategoriaPorNombre(Configuration::get('PS_LANG_DEFAULT'), $name);
-    dump($result);
-    if($result){
-        return $result[0]['id_category'];
-    }
-    else{
-        return insertarCategoriaDB(pSQL($name),$lang);
-    }
-}
-
-/*
- * Crear categoría
- */
-function insertarCategoriaDB($name,$langs){
-
-    $newCategory = new \Category();
-    $newCategory->active = 1;
-    foreach($langs as $language){
-        $names[(int)$language]=$name;
-        $links_rewriters[(int)$language]= seo_url($name);
-    }
-    $newCategory->name= $names;
-    $newCategory->id_parent = 2;
-    $newCategory->position = 1;
-    $newCategory->description = '';
-    $newCategory->is_root_category =1;
-    $newCategory->meta_keywords = '';
-    $newCategory->meta_description = '';
-    $newCategory->link_rewrite = $links_rewriters;
-
-    $id = creaCategoriaBd((int)\Context::getContext()->shop->id);
-
-    $newCategory->id_category = $id;
-    $newCategory->id = $id;
-    $newCategory->update();
-
-    return $id;
-}
-
-/*
- * Crea una tupla en BD de categoria
- */
-function creaCategoriaBd($shopId){
-    $db = \Db::getInstance();
-
-    $db->insert('category',array(
-        'id_parent' => 1,
-        'id_shop_default' => $shopId,
-        'active' => 1,
-        'is_root_category' => 1,
-        'date_add' => date('Y-m-d H:i:s'),
-    ));
-    $id = Db::getInstance()->Insert_ID();
-
-    return $id;
-}
-
-function buscarCategoriaPorNombre($lang,$name){
-    $db = \Db::getInstance();
-    $request = "SELECT id_category
-            FROM ps_category_lang
-            WHERE  name = '".$name."' AND id_lang = ".$lang;
-    $id = $db->executeS($request);
-    return $id;
-}
-
-/**
-* Obtener marca o instanciar una nueva si no existe
-*/
-function getIdMarcaProducto($nombreMarca){
-    if($id = \Manufacturer::getIdByName($nombreMarca)){
-        return $id;
-    }
-    else{
-       $db = \Db::getInstance();
-       $db->insert('manufacturer',array(
-           'name' => $nombreMarca,
-           'date_upd' => date('Y-m-d H:i:s'),
-       ));
-       getIdMarcaProducto($nombreMarca);
-    }
-}
-
-/*
- * Convierte a url amigable el string para link_rewrite
- */
-function seo_url($cadena){
-    $cadena = utf8_decode($cadena);
-    $cadena = str_replace(' ', '-', $cadena);
-    $cadena = str_replace(',', '', $cadena);
-    $cadena = str_replace('?', '', $cadena);
-    $cadena = str_replace('+', '', $cadena);
-    $cadena = str_replace(':', '', $cadena);
-    $cadena = str_replace('??', '', $cadena);
-    $cadena = str_replace('`', '', $cadena);
-    $cadena = str_replace('!', '', $cadena);
-    $cadena = str_replace('¿', '', $cadena);
-    $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ??';
-    $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
-    $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
-    echo"<br/> Seo Categoria ".$cadena."<br/>";
-    return $cadena;
-}
-
-/*
- * Funcion usada en desarrollo para eliminar de las tablas los registros
- * creados por el script cuando hay errores
- */
-function borrar(){
-    echo "Borrando....";
-    $db = \Db::getInstance();
-    $request = "DELETE FROM ps_product "
-            . " WHERE id_product > 19";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_product_lang "
-            . " WHERE id_product > 19";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_product_shop "
-            . " WHERE id_product > 15";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_category"
-            . " WHERE id_category > 15";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_category_lang"
-            . " WHERE id_category > 15";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_category_shop"
-            . " WHERE id_category > 15";
-    $db->execute($request);
-
-    $request = "DELETE FROM ps_category_product"
-            . " WHERE id_product > 22";
-    $db->execute($request);
-
-    echo "Borrado";
 }
