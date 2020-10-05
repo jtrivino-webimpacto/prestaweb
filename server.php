@@ -41,7 +41,7 @@ $product->wholesale_price = $wholesale_price;
 $product->id_tax_rules_group = (int)getIVA($iva);
 //dump((int)getIVA($iva));
 $product->quantity = $quantity;
-$product->miminal_quantity = 0;
+$product->minimal_quantity = 0;
 $product->id_category = $root_category->id;
 $product->id_category_default = $root_category->id;
 $product->redirect_type = '404';
